@@ -1,4 +1,4 @@
-import { GetStaticProps, GetStaticPaths } from 'next'
+import { GetStaticPaths, GetStaticProps } from 'next'
 
 import { User } from '../../interfaces'
 import { sampleUserData } from '../../utils/sample-data'
@@ -10,7 +10,7 @@ type Props = {
   errors?: string
 }
 
-const StaticPropsDetail = ({ item, errors }: Props) => {
+const StaticPropsDetail = ({ item, errors }: Props): JSX.Element => {
   if (errors) {
     return (
       <Layout title="Error | Next.js + TypeScript Example">
@@ -22,11 +22,7 @@ const StaticPropsDetail = ({ item, errors }: Props) => {
   }
 
   return (
-    <Layout
-      title={`${
-        item ? item.name : 'User Detail'
-      } | Next.js + TypeScript Example`}
-    >
+    <Layout title={`${item ? item.name : 'User Detail'} | Next.js + TypeScript Example`}>
       {item && <ListDetail item={item} />}
     </Layout>
   )
@@ -34,7 +30,10 @@ const StaticPropsDetail = ({ item, errors }: Props) => {
 
 export default StaticPropsDetail
 
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = async (): Promise<{
+  paths: { params: { id: string } }[]
+  fallback: boolean
+}> => {
   // Get the paths we want to pre-render based on users
   const paths = sampleUserData.map((user) => ({
     params: { id: user.id.toString() },
@@ -48,7 +47,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 // This function gets called at build time on server-side.
 // It won't be called on client-side, so you can even do
 // direct database queries.
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps = async ({ params }): Promise<{ props: Props }> => {
   try {
     const id = params?.id
     const item = sampleUserData.find((data) => data.id === Number(id))

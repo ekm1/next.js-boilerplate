@@ -6,7 +6,7 @@ type Props = {
   items: User[]
 }
 
-const List = ({ items }: Props) => (
+const List: React.FunctionComponent<Props> = ({ items }: Props) => (
   <ul>
     {items.map((item) => (
       <li key={item.id}>
